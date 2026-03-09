@@ -1,0 +1,21 @@
+.git
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.db
+.DS_Store
+
+# Large data and models
+LLaMA-7B-2/
+Llama-2-7b-hf/
+dataset/
+*.zip
+*.tar.gz
+*.pth
+*.model
+
+# Build artifacts
+dist/
+build/
+*.egg-info/

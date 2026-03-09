@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  graph-llm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: graph-llm:latest
+    container_name: graph-llm-container
+    volumes:
+      - .:/app
+      # 挂载模型和数据集目录
+      - ./LLaMA-7B-2:/app/LLaMA-7B-2
+      - ./Llama-2-7b-hf:/app/Llama-2-7b-hf
+      - ./dataset:/app/dataset
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    stdin_open: true
+    tty: true
+    working_dir: /app
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
