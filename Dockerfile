@@ -18,8 +18,8 @@ RUN apt-get update && apt-get install -y \
 # 设置 python3.10 为默认 python
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
-# 升级 pip
-RUN python -m pip install --upgrade pip
+# 升级 pip 并安装基础构建工具
+RUN python -m pip install --upgrade pip setuptools wheel
 
 # 设置工作目录
 WORKDIR /app
@@ -29,7 +29,11 @@ COPY requirements.txt .
 
 # 安装 PyTorch 和相关的 PyG 组件
 # 注意：由于 requirements.txt 中已经指定了 +pt20cu118，我们需要指定对应的 whl 路径
-RUN pip install torch==2.0.1+cu118 torchvision==0.15.2+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
+# 增加 timeout 和 retries 以应对大文件下载不稳定的情况
+RUN pip install --default-timeout=1000 --no-cache-dir \
+    torch==2.0.1+cu118 \
+    torchvision==0.15.2+cu118 \
+    --extra-index-url https://download.pytorch.org/whl/cu118
 
 # 安装其他依赖
 # 过滤掉已经手动安装的 torch 和 torchvision，或者直接运行以免版本冲突
